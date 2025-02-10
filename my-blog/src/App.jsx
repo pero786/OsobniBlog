@@ -25,7 +25,6 @@ function Layout(props) {
   return (
     <>
       <div class="p-4 flex flex-col gap-4">
-        {/* Gornji dio aplikacije */}
         <header class="bg-gradient-to-r from-orange-300 to-red-400 p-4 rounded-lg shadow-md text-white">
           <div class="text-4xl font-bold uppercase text-center">{appName}</div>
           <nav class="mt-4 flex justify-center gap-4">
@@ -45,14 +44,12 @@ function Layout(props) {
           </nav>
         </header>
 
-        {/* Glavni sadržaj */}
         <main class="min-h-[75vh] w-10/12 mx-auto my-6 bg-gray-50 p-6 rounded-lg shadow-md">
           {props.children}
         </main>
 
-        {/* Donji dio aplikacije */}
         <footer class="text-center text-xs text-gray-600">
-          © {new Date().getFullYear()} Pero i sinovi. Sva prava pridržana.
+          © {new Date().getFullYear()} Petar Šarec. Sva prava pridržana.
         </footer>
       </div>
     </>
