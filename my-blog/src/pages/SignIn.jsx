@@ -76,7 +76,7 @@ export default function SignIn() {
         </button>
       </form>
       <p class="text-sm text-gray-600 text-center mt-6">
-        Nemate račun? <a href="/SignUp" class="text-blue-500 hover:underline">Registrirajte se</a>.
+        Nemate račun? <a href="/signup" class="text-blue-500 hover:underline">Registrirajte se</a>.
       </p>
     </div>
   );

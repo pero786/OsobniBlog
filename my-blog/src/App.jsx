@@ -2,6 +2,7 @@ import { Router, Route } from "@solidjs/router";
 import home from "./pages/home";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
+import SignUp from "./pages/SignUp";
 import { A } from "@solidjs/router";
 import { AuthProvider, useAuth } from "./components/AuthProvider";
 import { Show } from "solid-js";
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/" component={home} />
         <Route path="/signin" component={SignIn} />
         <Route path="/signout" component={SignOut} />
+        <Route path="/signup" component={SignUp} />
       </Router>
     </AuthProvider>
   );
