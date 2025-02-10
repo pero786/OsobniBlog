@@ -1,4 +1,4 @@
-import { createSignal, Show } from "solid-js";
+import { createSignal } from 'solid-js';
 import { supabase } from "../services/supabase";
 import { useNavigate } from "@solidjs/router";
 
@@ -8,24 +8,25 @@ export default function CreatePost() {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    const user = supabase.auth.user();
-    if (!user) return alert('Morate biti prijavljeni!');
-
-    const { error } = await supabase.from('posts').insert([
+    const { data: user, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) return alert('Morate biti prijavljeni!');
+  
+    const { error: insertError } = await supabase.from('posts').insert([
       {
         title: title(),
         content: content(),
-        user_id: user.id,
+        user_id: user.id,  
       },
     ]);
-
-    if (error) {
-      console.error('Greška pri dodavanju posta:', error.message);
+  
+    if (insertError) {
+      console.error('Greška pri dodavanju posta:', insertError.message);
     } else {
       alert('Post uspješno dodan!');
       navigate('/');
     }
   };
+  
 
   return (
     <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
