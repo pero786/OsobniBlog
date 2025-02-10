@@ -37,7 +37,7 @@ export default function SignIn() {
 
   return (
     <div class="max-w-lg mx-auto mt-12 p-8 bg-gradient-to-br from-white to-gray-100 rounded-lg shadow-lg border border-gray-300">
-      <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Dobrodošli na osobni blog!</h2>
+      <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Dobrodošli na Vaš osobni blog!</h2>
       <Show when={message().text}>
         <div
           class={`p-4 mb-4 rounded text-sm ${
