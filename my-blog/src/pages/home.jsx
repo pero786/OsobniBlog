@@ -19,7 +19,7 @@ export default function Home() {
         Dobrodošli na moj osobni blog!
       </h1>
       <p class="text-lg text-gray-600 text-center">
-        Ovo je mjesto gdje dijelim svoje misli, projekte i ideje. Nadam se da će vam biti zanimljivo!
+        Ovo je mjesto za najjače projekte i ideje. Nadam se da će vam biti zanimljivo!
       </p>
       <div class="mt-8">
         <h2 class="text-2xl font-semibold text-gray-700 mb-4">Najnoviji članci</h2>
