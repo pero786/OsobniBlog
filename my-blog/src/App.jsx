@@ -3,6 +3,7 @@ import home from "./pages/home";
 import SignIn from "./pages/SignIn";
 import SignOut from "./pages/SignOut";
 import SignUp from "./pages/SignUp";
+
 import { A } from "@solidjs/router";
 import { AuthProvider, useAuth } from "./components/AuthProvider";
 import { Show } from "solid-js";
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/signin" component={SignIn} />
         <Route path="/signout" component={SignOut} />
         <Route path="/signup" component={SignUp} />
+        <Route path="/create-post" component={CreatePost} />
       </Router>
     </AuthProvider>
   );
@@ -41,6 +43,11 @@ function Layout(props) {
             <Show when={session()}>
               <A href="/signout" class="bg-white text-orange-500 px-4 py-2 rounded shadow hover:bg-orange-100">
                 Odjava
+              </A>
+            </Show>
+            <Show when={session()}>
+              <A href="/create-post" class="bg-white text-orange-500 px-4 py-2 rounded shadow hover:bg-orange-100">
+                Nova objava
               </A>
             </Show>
           </nav>
