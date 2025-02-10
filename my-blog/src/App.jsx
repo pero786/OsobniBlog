@@ -1,18 +1,60 @@
-import { createClient } from "@supabase/supabase-js";
-import Auth from './components/Auth';
+import { Router, Route } from "@solidjs/router";
+import home from "./pages/home";
+import SignIn from "./pages/SignIn";
+import SignOut from "./pages/SignOut";
+import { A } from "@solidjs/router";
+import { AuthProvider, useAuth } from "./components/AuthProvider";
+import { Show } from "solid-js";
 
-const supabase = createClient('https://clzdstlzqppxwqsdoqno.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsemRzdGx6cXBweHdxc2RvcW5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzg1NzM0MjQsImV4cCI6MjA1NDE0OTQyNH0.5E-pgBLn_Uqf5YH2_yVGV1Je57z3XwTMk3sXofLexWs');
-
-function App() {
+export default function App() {
   return (
-    <>
-      <h1 class="text-3xl font-bold underline">OSOBNI BLOG</h1>
-      <div>
-      <h1 class="text-3xl font-bold text-center my-4">Osobni blog</h1>
-      <Auth />
-    </div>
-    </>
+    <AuthProvider>
+      <Router root={Layout}>
+        <Route path="/" component={home} />
+        <Route path="/signin" component={SignIn} />
+        <Route path="/signout" component={SignOut} />
+      </Router>
+    </AuthProvider>
   );
 }
 
-export default App;
+function Layout(props) {
+  const appName = import.meta.env.VITE_APP_NAME || "Osobni Blog";
+  const session = useAuth();
+
+  return (
+    <>
+      <div class="p-4 flex flex-col gap-4">
+        {/* Gornji dio aplikacije */}
+        <header class="bg-gradient-to-r from-orange-300 to-red-400 p-4 rounded-lg shadow-md text-white">
+          <div class="text-4xl font-bold uppercase text-center">{appName}</div>
+          <nav class="mt-4 flex justify-center gap-4">
+            <A href="/" class="bg-white text-orange-500 px-4 py-2 rounded shadow hover:bg-orange-100">
+              Naslovnica
+            </A>
+            <Show when={!session()}>
+              <A href="/signin" class="bg-white text-orange-500 px-4 py-2 rounded shadow hover:bg-orange-100">
+                Prijava
+              </A>
+            </Show>
+            <Show when={session()}>
+              <A href="/signout" class="bg-white text-orange-500 px-4 py-2 rounded shadow hover:bg-orange-100">
+                Odjava
+              </A>
+            </Show>
+          </nav>
+        </header>
+
+        {/* Glavni sadržaj */}
+        <main class="min-h-[75vh] w-10/12 mx-auto my-6 bg-gray-50 p-6 rounded-lg shadow-md">
+          {props.children}
+        </main>
+
+        {/* Donji dio aplikacije */}
+        <footer class="text-center text-xs text-gray-600">
+          © {new Date().getFullYear()} Pero i sinovi. Sva prava pridržana.
+        </footer>
+      </div>
+    </>
+  );
+}
