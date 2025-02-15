@@ -1,14 +1,10 @@
 import { createContext,createSignal, useContext,Show  } from "solid-js";
 import { supabase } from "../services/supabase";
 
-// content
 const AuthContext = createContext();
-
-//helper
 export function useAuth(){
     return useContext (AuthContext);
 }
-//component
 export function AuthProvider(props){
     const [session, setSession] = createSignal(null);
     const [loading, setLoading] = createSignal(true);
