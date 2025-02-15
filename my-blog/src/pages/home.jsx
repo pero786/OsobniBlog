@@ -1,5 +1,6 @@
 import { createResource, Show } from "solid-js";
 import { supabase } from "../services/supabase";
+import Comments from "../components/Comments";
 
 async function fetchPosts() {
   const { data, error } = await supabase
@@ -32,6 +33,7 @@ export default function Home() {
                 <p class="text-sm text-gray-500 mt-2">
                   Objavljeno: {new Date(post.created_at).toLocaleDateString()}
                 </p>
+                <Comments postId={post.id} />
               </div>
             )}
           </For>
