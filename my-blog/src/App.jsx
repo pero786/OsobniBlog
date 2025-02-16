@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from "./components/AuthProvider";
 import { Show } from "solid-js";
 import EditPost from "./components/EditPost";
 import ManageCategories from "./components/ManageCategories";
+import Category from "./components/Category";
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/create-post" component={CreatePost} />
         <Route path="/edit-post/:id" component={EditPost} />
         <Route path="/manage-categories" component={ManageCategories} />
+        <Route path="/category/:id" component={Category} />
       </Router>
     </AuthProvider>
   );
