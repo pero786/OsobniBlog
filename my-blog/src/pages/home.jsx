@@ -1,6 +1,7 @@
 import { createResource, Show } from "solid-js";
 import { supabase } from "../services/supabase";
 import Comments from "../components/Comments";
+import { A } from "@solidjs/router";
 
 async function fetchPosts() {
   const { data, error } = await supabase
@@ -34,6 +35,9 @@ export default function Home() {
                   Objavljeno: {new Date(post.created_at).toLocaleDateString()}
                 </p>
                 <Comments postId={post.id} />
+                <A href={`/edit-post/${post.id}`} class="btn btn-secondary">
+                  Uredi
+                </A>
               </div>
             )}
           </For>

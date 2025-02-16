@@ -7,6 +7,8 @@ import CreatePost from "./components/CreatePost";
 import { A } from "@solidjs/router";
 import { AuthProvider, useAuth } from "./components/AuthProvider";
 import { Show } from "solid-js";
+import EditPost from "./components/EditPost";
+import ManageCategories from "./components/ManageCategories";
 
 export default function App() {
   return (
@@ -17,6 +19,8 @@ export default function App() {
         <Route path="/signout" component={SignOut} />
         <Route path="/signup" component={SignUp} />
         <Route path="/create-post" component={CreatePost} />
+        <Route path="/edit-post/:id" component={EditPost} />
+        <Route path="/manage-categories" component={ManageCategories} />
       </Router>
     </AuthProvider>
   );
@@ -48,6 +52,11 @@ function Layout(props) {
             <Show when={session()}>
               <A href="/create-post" class="bg-white text-orange-500 px-4 py-2 rounded shadow hover:bg-orange-100">
                 Nova objava
+              </A>
+            </Show>
+            <Show when={session()}>
+              <A href="/manage-categories" class="bg-white text-orange-500 px-4 py-2 rounded shadow hover:bg-orange-100">
+                Upravljanje kategorijama
               </A>
             </Show>
           </nav>
