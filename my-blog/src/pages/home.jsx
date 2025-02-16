@@ -1,13 +1,13 @@
-import { createResource, Show, For } from "solid-js";
+import { createResource, createSignal, Show, For } from "solid-js";
 import { supabase } from "../services/supabase";
 import Comments from "../components/Comments";
-import { A, useNavigate } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import { useAuth } from "../components/AuthProvider";
 
 async function fetchPosts() {
   const { data, error } = await supabase
     .from('posts')
-    .select('*, categories(name)')
+    .select('*, categories(name)') 
     .order('created_at', { ascending: false });
   if (error) throw error;
   return data;
@@ -21,9 +21,9 @@ async function fetchCategories() {
 
 export default function Home() {
   const [posts] = createResource(fetchPosts);
+  const [categories] = createResource(fetchCategories);
+  const [selectedCategory, setSelectedCategory] = createSignal('');
   const session = useAuth();
-  const navigate = useNavigate();
-
 
   const handleDelete = async (postId) => {
     const { error } = await supabase
@@ -35,8 +35,13 @@ export default function Home() {
       console.error('Greška pri brisanju posta:', error.message);
     } else {
       alert('Post uspješno obrisan!');
-      window.location.reload();
+      window.location.reload(); 
     }
+  };
+
+  const filteredPosts = () => {
+    if (!selectedCategory()) return posts();
+    return posts().filter((post) => post.category_id === selectedCategory());
   };
 
   return (
@@ -47,6 +52,8 @@ export default function Home() {
       <p class="text-lg text-gray-600 text-center">
         Ovo je mjesto za najjače projekte i ideje. Nadam se da će vam biti zanimljivo!
       </p>
+
+      
       <div class="mt-8">
         <select
           class="select select-bordered w-full mb-4"
@@ -60,10 +67,25 @@ export default function Home() {
           </For>
         </select>
       </div>
+
+      
+      <div class="flex flex-wrap gap-2 mb-6">
+        <For each={categories()}>
+          {(category) => (
+            <A
+              href={`/category/${category.id}`}
+              class="btn btn-outline btn-sm"
+            >
+              {category.name}
+            </A>
+          )}
+        </For>
+      </div>
+
       <div class="mt-8">
         <h2 class="text-2xl font-semibold text-gray-700 mb-4">Najnoviji članci</h2>
         <Show when={!posts.loading} fallback={<p class="text-center">Učitavanje...</p>}>
-          <For each={posts()}>
+          <For each={filteredPosts()}>
             {(post) => (
               <div class="bg-gray-50 p-6 rounded-lg shadow-sm mb-6">
                 <h3 class="text-xl font-bold text-gray-800 mb-2">{post.title}</h3>
@@ -72,7 +94,7 @@ export default function Home() {
                   Kategorija: {post.categories?.name || 'Nema kategorije'} | Objavljeno: {new Date(post.created_at).toLocaleDateString()}
                 </p>
 
-               
+                
                 <div class="flex gap-2">
                   <Show when={session() && session().user.id === post.user_id}>
                     <A
@@ -90,6 +112,7 @@ export default function Home() {
                   </Show>
                 </div>
 
+                
                 <div class="mt-6">
                   <Comments postId={post.id} />
                 </div>
