@@ -7,7 +7,7 @@ import { useAuth } from "../components/AuthProvider";
 async function fetchPosts() {
   const { data, error } = await supabase
     .from('posts')
-    .select('*, categories(name)') 
+    .select('*, categories(name)')
     .order('created_at', { ascending: false });
   if (error) throw error;
   return data;
@@ -35,7 +35,7 @@ export default function Home() {
       console.error('Greška pri brisanju posta:', error.message);
     } else {
       alert('Post uspješno obrisan!');
-      window.location.reload(); 
+      window.location.reload();
     }
   };
 
@@ -53,7 +53,7 @@ export default function Home() {
         Ovo je mjesto za najjače projekte i ideje. Nadam se da će vam biti zanimljivo!
       </p>
 
-      
+
       <div class="mt-8">
         <select
           class="select select-bordered w-full mb-4"
@@ -68,7 +68,7 @@ export default function Home() {
         </select>
       </div>
 
-      
+
       <div class="flex flex-wrap gap-2 mb-6">
         <For each={categories()}>
           {(category) => (
@@ -94,7 +94,6 @@ export default function Home() {
                   Kategorija: {post.categories?.name || 'Nema kategorije'} | Objavljeno: {new Date(post.created_at).toLocaleDateString()}
                 </p>
 
-                
                 <div class="flex gap-2">
                   <Show when={session() && session().user.id === post.user_id}>
                     <A
@@ -111,11 +110,12 @@ export default function Home() {
                     </button>
                   </Show>
                 </div>
-
-                
-                <div class="mt-6">
-                  <Comments postId={post.id} />
+                <div class="flex gap-2">
+                  <Show when={session() && session().user.id === post.user_id}>
+                    <Comments postId={post.id} />
+                  </Show>
                 </div>
+
               </div>
             )}
           </For>
