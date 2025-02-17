@@ -1,4 +1,4 @@
-import { createSignal, Show } from "solid-js";
+import { createSignal } from "solid-js";
 import { supabase } from "../services/supabase";
 import { useNavigate } from "@solidjs/router";
 import { A } from "@solidjs/router";
