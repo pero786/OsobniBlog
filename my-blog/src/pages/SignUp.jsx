@@ -17,7 +17,7 @@ export default function SignUp() {
       console.error('Greška pri registraciji:', error.message);
     } else {
       alert('Provjerite e-mail za potvrdu!');
-      navigate('/signin'); 
+      navigate('/signin');
     }
   };
 

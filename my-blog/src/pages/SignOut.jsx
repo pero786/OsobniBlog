@@ -22,9 +22,8 @@ export default function SignOut() {
     <div class="max-w-lg mx-auto mt-12 p-8 bg-gradient-to-br from-white to-gray-100 rounded-lg shadow-lg border border-gray-300">
       <Show when={message().text}>
         <div
-          class={`p-4 rounded text-sm ${
-            message().type === "error" ? "bg-red-50 text-red-700 border border-red-300" : "bg-green-50 text-green-700 border border-green-300"
-          }`}
+          class={`p-4 rounded text-sm ${message().type === "error" ? "bg-red-50 text-red-700 border border-red-300" : "bg-green-50 text-green-700 border border-green-300"
+            }`}
         >
           {message().text}
         </div>

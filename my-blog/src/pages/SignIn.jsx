@@ -40,9 +40,8 @@ export default function SignIn() {
       <h2 class="text-2xl font-semibold text-center text-gray-800 mb-6">Dobrodošli na Vaš osobni blog!</h2>
       <Show when={message().text}>
         <div
-          class={`p-4 mb-4 rounded text-sm ${
-            message().type === "error" ? "bg-red-50 text-red-700 border border-red-300" : "bg-green-50 text-green-700 border border-green-300"
-          }`}
+          class={`p-4 mb-4 rounded text-sm ${message().type === "error" ? "bg-red-50 text-red-700 border border-red-300" : "bg-green-50 text-green-700 border border-green-300"
+            }`}
         >
           {message().text}
         </div>
