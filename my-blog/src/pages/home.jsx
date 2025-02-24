@@ -3,6 +3,7 @@ import { supabase } from "../services/supabase";
 import Comments from "../components/Comments";
 import { A } from "@solidjs/router";
 import { useAuth } from "../components/AuthProvider";
+import LikeButton from "../components/LikeButton";
 
 async function fetchPosts() {
   const { data, error } = await supabase
@@ -108,6 +109,7 @@ export default function Home() {
                     >
                       Obriši
                     </button>
+                    <LikeButton postId={post.id} />
                   </Show>
                 </div>
                 <div class="flex gap-2">
