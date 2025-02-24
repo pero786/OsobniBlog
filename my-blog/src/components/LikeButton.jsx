@@ -6,6 +6,8 @@ export default function LikeButton({ postId }) {
     const [likes, setLikes] = createSignal(0);
     const [isLiked, setIsLiked] = createSignal(false);
     const session = useAuth();
+
+    // Dohvati broj lajkova i provjeri je li korisnik lajkao objavu
     createEffect(async () => {
         const { count, error } = await supabase
             .from('likes')
@@ -33,4 +35,46 @@ export default function LikeButton({ postId }) {
             }
         }
     });
-    
+
+    // Funkcija za lajkanje/odlajkivanje
+    const handleLike = async () => {
+        if (!session()) return alert('Morate biti prijavljeni!');
+
+        if (isLiked()) {
+            // Odlajkaj
+            const { error } = await supabase
+                .from('likes')
+                .delete()
+                .eq('post_id', postId)
+                .eq('user_id', session().user.id);
+
+            if (error) {
+                console.error('Greška pri odlajkivanju:', error.message);
+            } else {
+                setIsLiked(false);
+                setLikes((prev) => prev - 1);
+            }
+        } else {
+            // Lajkaj
+            const { error } = await supabase
+                .from('likes')
+                .insert([{ post_id: postId, user_id: session().user.id }]);
+
+            if (error) {
+                console.error('Greška pri lajkanju:', error.message);
+            } else {
+                setIsLiked(true);
+                setLikes((prev) => prev + 1);
+            }
+        }
+    };
+
+    return (
+        <button
+            class={`btn ${isLiked() ? 'btn-primary' : 'btn-outline'}`}
+            onClick={handleLike}
+        >
+            ❤️ {likes()}
+        </button>
+    );
+}
