@@ -109,11 +109,13 @@ export default function Home() {
                     >
                       Obriši
                     </button>
-                    <LikeButton postId={post.id} />
+                    <Show when={session()}>
+                      <LikeButton postId={post.id} />
+                    </Show>
                   </Show>
                 </div>
                 <div class="flex gap-2">
-                  <Show when={session() && session().user.id === post.user_id}>
+                  <Show when={session()}>
                     <Comments postId={post.id} />
                   </Show>
                 </div>

@@ -19,7 +19,7 @@ export default function LikeButton({ postId }) {
             if (countError) throw countError;
             setLikes(count || 0);
 
-            // Provjeri je li korisnik lajkao objavu
+            // Provjeri je li korisnik lajkao objavu (samo ako je prijavljen)
             if (session()) {
                 const { data: likeData, error: likeError } = await supabase
                     .from('likes')
@@ -35,6 +35,7 @@ export default function LikeButton({ postId }) {
             console.error('Greška pri dohvaćanju podataka:', error.message);
         }
     });
+
 
     // Funkcija za lajkanje/odlajkivanje
     const handleLike = async () => {
