@@ -3,9 +3,9 @@ import { supabase } from '../services/supabase';
 import { useAuth } from '../components/AuthProvider';
 
 export default function LikeButton({ postId }) {
-    const [likes, setLikes] = createSignal(0);
-    const [isLiked, setIsLiked] = createSignal(false);
-    const session = useAuth();
+    const [likes, setLikes] = createSignal(0); // Broj lajkova
+    const [isLiked, setIsLiked] = createSignal(false); // Je li trenutni korisnik lajkao
+    const session = useAuth(); // Trenutna sesija korisnika
 
     // Dohvati broj lajkova i provjeri je li korisnik lajkao objavu
     createEffect(async () => {
@@ -19,7 +19,7 @@ export default function LikeButton({ postId }) {
             if (countError) throw countError;
             setLikes(count || 0);
 
-            // Provjeri je li korisnik lajkao objavu (samo ako je prijavljen)
+            // Provjeri je li trenutni korisnik lajkao objavu (samo ako je prijavljen)
             if (session()) {
                 const { data: likeData, error: likeError } = await supabase
                     .from('likes')
@@ -32,10 +32,9 @@ export default function LikeButton({ postId }) {
                 setIsLiked(!!likeData);
             }
         } catch (error) {
-            console.error('Greška pri dohvaćanju podataka:', error.message);
+            console.error('Greška pri dohvaćanju podataka o lajkovima:', error.message);
         }
     });
-
 
     // Funkcija za lajkanje/odlajkivanje
     const handleLike = async () => {
@@ -44,7 +43,6 @@ export default function LikeButton({ postId }) {
         try {
             if (isLiked()) {
                 // Odlajkaj
-                console.log('Pokušaj brisanja lajka...');
                 const { error: deleteError } = await supabase
                     .from('likes')
                     .delete()
@@ -55,34 +53,19 @@ export default function LikeButton({ postId }) {
 
                 setIsLiked(false);
                 setLikes((prev) => Math.max(0, prev - 1));
-                console.log('Lajk uspješno obrisan.');
             } else {
                 // Lajkaj
-                console.log('Pokušaj dodavanja lajka...');
-                const { data: existingLike, error: checkError } = await supabase
+                const { error: insertError } = await supabase
                     .from('likes')
-                    .select('*')
-                    .eq('post_id', postId)
-                    .eq('user_id', session().user.id)
-                    .maybeSingle();
+                    .insert([{ post_id: postId, user_id: session().user.id }]);
 
-                if (checkError) throw checkError;
+                if (insertError) throw insertError;
 
-                if (!existingLike) {
-                    const { error: insertError } = await supabase
-                        .from('likes')
-                        .insert([{ post_id: postId, user_id: session().user.id }]);
-
-                    if (insertError) throw insertError;
-
-                    setIsLiked(true);
-                    setLikes((prev) => prev + 1);
-                    console.log('Lajk uspješno dodan.');
-                }
+                setIsLiked(true);
+                setLikes((prev) => prev + 1);
             }
         } catch (error) {
             console.error('Greška pri lajkanju/odlajkivanju:', error.message);
-            alert(`Došlo je do greške: ${error.message}`);
         }
     };
 
@@ -90,6 +73,7 @@ export default function LikeButton({ postId }) {
         <button
             class={`btn ${isLiked() ? 'btn-primary' : 'btn-outline'}`}
             onClick={handleLike}
+            disabled={!session()} // Onemogući gumb ako korisnik nije prijavljen
         >
             ❤️ {likes()}
         </button>
