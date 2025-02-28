@@ -1,6 +1,8 @@
 import { createResource, createSignal, Show, For } from "solid-js";
 import { supabase } from "../services/supabase";
 import Comments from "../components/Comments";
+import { A } from "@solidjs/router";
+import { useAuth } from "../components/AuthProvider";
 import LikeButton from "../components/LikeButton";
 
 async function fetchPosts() {
@@ -22,6 +24,21 @@ export default function Home() {
   const [posts] = createResource(fetchPosts);
   const [categories] = createResource(fetchCategories);
   const [selectedCategory, setSelectedCategory] = createSignal('');
+  const session = useAuth();
+
+  const handleDelete = async (postId) => {
+    const { error } = await supabase
+      .from('posts')
+      .delete()
+      .eq('id', postId);
+
+    if (error) {
+      console.error('Greška pri brisanju posta:', error.message);
+    } else {
+      alert('Post uspješno obrisan!');
+      window.location.reload();
+    }
+  };
 
   const filteredPosts = () => {
     if (!selectedCategory()) return posts();
@@ -54,9 +71,12 @@ export default function Home() {
       <div class="flex flex-wrap gap-2 mb-6">
         <For each={categories()}>
           {(category) => (
-            <a href={`/category/${category.id}`} class="btn btn-outline btn-sm">
+            <A
+              href={`/category/${category.id}`}
+              class="btn btn-outline btn-sm"
+            >
               {category.name}
-            </a>
+            </A>
           )}
         </For>
       </div>
@@ -72,6 +92,24 @@ export default function Home() {
                 <p class="text-sm text-gray-500 mb-4">
                   Kategorija: {post.categories?.name || 'Nema kategorije'} | Objavljeno: {new Date(post.created_at).toLocaleDateString()}
                 </p>
+
+                {/* Gumbi za uređivanje i brisanje - prikazuju se samo autoru */}
+                <Show when={session() && session().user.id === post.user_id}>
+                  <div class="flex gap-2">
+                    <A
+                      href={`/edit-post/${post.id}`}
+                      class="btn btn-secondary flex-1"
+                    >
+                      Uredi
+                    </A>
+                    <button
+                      class="btn btn-error flex-1"
+                      onClick={() => handleDelete(post.id)}
+                    >
+                      Obriši
+                    </button>
+                  </div>
+                </Show>
 
                 {/* Prikaz LikeButton-a */}
                 <LikeButton postId={post.id} />
