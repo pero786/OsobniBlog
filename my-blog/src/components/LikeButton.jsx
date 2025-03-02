@@ -3,14 +3,12 @@ import { supabase } from '../services/supabase';
 import { useAuth } from '../components/AuthProvider';
 
 export default function LikeButton({ postId }) {
-    const [likes, setLikes] = createSignal(0); // Broj lajkova
-    const [isLiked, setIsLiked] = createSignal(false); // Je li trenutni korisnik lajkao
-    const session = useAuth(); // Trenutna sesija korisnika
+    const [likes, setLikes] = createSignal(0); 
+    const [isLiked, setIsLiked] = createSignal(false); 
+    const session = useAuth(); 
 
-    // Dohvati broj lajkova i provjeri je li korisnik lajkao objavu
     createEffect(async () => {
         try {
-            // Dohvati broj lajkova za post
             const { count, error: countError } = await supabase
                 .from('likes')
                 .select('*', { count: 'exact' })
@@ -19,7 +17,6 @@ export default function LikeButton({ postId }) {
             if (countError) throw countError;
             setLikes(count || 0);
 
-            // Provjeri je li trenutni korisnik lajkao objavu (samo ako je prijavljen)
             if (session()) {
                 const { data: likeData, error: likeError } = await supabase
                     .from('likes')
@@ -36,13 +33,11 @@ export default function LikeButton({ postId }) {
         }
     });
 
-    // Funkcija za lajkanje/odlajkivanje
     const handleLike = async () => {
         if (!session()) return alert('Morate biti prijavljeni!');
 
         try {
             if (isLiked()) {
-                // Odlajkaj
                 const { error: deleteError } = await supabase
                     .from('likes')
                     .delete()
@@ -54,7 +49,6 @@ export default function LikeButton({ postId }) {
                 setIsLiked(false);
                 setLikes((prev) => Math.max(0, prev - 1));
             } else {
-                // Lajkaj
                 const { error: insertError } = await supabase
                     .from('likes')
                     .insert([{ post_id: postId, user_id: session().user.id }]);
@@ -73,7 +67,7 @@ export default function LikeButton({ postId }) {
         <button
             class={`btn ${isLiked() ? 'btn-primary' : 'btn-outline'}`}
             onClick={handleLike}
-            disabled={!session()} // Onemogući gumb ako korisnik nije prijavljen
+            disabled={!session()} 
         >
             ❤️ {likes()}
         </button>

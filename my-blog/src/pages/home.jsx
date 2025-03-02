@@ -92,8 +92,6 @@ export default function Home() {
                 <p class="text-sm text-gray-500 mb-4">
                   Kategorija: {post.categories?.name || 'Nema kategorije'} | Objavljeno: {new Date(post.created_at).toLocaleDateString()}
                 </p>
-
-                {/* Gumbi za uređivanje i brisanje - prikazuju se samo autoru */}
                 <Show when={session() && session().user.id === post.user_id}>
                   <div class="flex gap-2">
                     <A
@@ -111,10 +109,8 @@ export default function Home() {
                   </div>
                 </Show>
 
-                {/* Prikaz LikeButton-a */}
                 <LikeButton postId={post.id} />
 
-                {/* Prikaz komentara */}
                 <Comments postId={post.id} />
               </div>
             )}
